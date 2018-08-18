@@ -1,0 +1,48 @@
+{
+  "name": "sington",
+  "version": "0.0.1",
+  "description": "Javascript library for graphic formats conversion.",
+  "main": "dist/sington.min.js",
+  "keywords": [
+    "dicom",
+    "tiff",
+    "raw",
+    "jpg",
+    "png"
+  ],
+  "scripts": {
+    "dev": "node ./build/dev-server.js",
+    "build": "webpack --config ./build/webpack.prod.conf.js",
+    "test": "karma start",
+    "ci": "karma start --single-run && npm install codecov -D && codecov coverage/cobertura-coverage.xml"
+  },
+  "engines": {
+    "node": ">=8.0.0",
+    "npm": ">=5.0.0"
+  },
+  "author": "JanathonJiang <qinghuangniao@gmail.com>",
+  "license": "MIT",
+  "repository": "https://github.com/janostudio/sington.git",
+  "bugs": {
+    "url": "https://github.com/janostudio/sington/issues"
+  },
+  "homepage": "https://github.com/janostudio/sington",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-istanbul": "^4.1.5",
+    "babel-preset-env": "^1.7.0",
+    "html-webpack-plugin": "^3.2.0",
+    "istanbul-instrumenter-loader": "^3.0.0",
+    "jasmine-core": "^3.2.1",
+    "karma": "^3.0.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage-istanbul-reporter": "^2.0.1",
+    "karma-jasmine": "^1.1.1",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^3.0.0",
+    "webpack": "^4.16.5",
+    "webpack-dev-server": "^3.1.5"
+  },
+  "dependencies": {}
+}
