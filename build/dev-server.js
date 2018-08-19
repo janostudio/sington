@@ -2,9 +2,14 @@ const path = require('path');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 const baseConfig = require('./webpack.base.conf');
+const opn = require('opn');
+
+baseConfig.entry.push('webpack/hot/dev-server', 'webpack-dev-server/client?http://localhost:9001/');
+baseConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+baseConfig.mode = 'development';
 
 const devConfig = {
-  contentBase: path.join(__dirname, '../dist'),
+  contentBase: path.join(__dirname, '../'),
   publicPath: '/',
   watchOptions: {
     ignored: /node_modules/,
@@ -26,5 +31,5 @@ devServer.listen(port, HOST, err => {
   if (err) {
     return console.log(err);
   }
-  console.log('Starting the development server...\n');
+  opn('http://localhost:' + port);
 });

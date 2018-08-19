@@ -1,13 +1,8 @@
-const webpack = require('webpack');
-const path = require('path');
-
 module.exports = {
   devtool: 'inline-source-map',
   resolve: {
-    alias: {
-      'vue': 'vue/dist/vue.js'
-    },
-    extensions: ['.js', '.vue']
+    alias: {},
+    extensions: ['.js']
   },
   module: {
     rules: [
@@ -29,10 +24,6 @@ module.exports = {
           }
         },
         exclude: /node_modules/
-      },
-      {
-        test: /\.vue$/,
-        loader: 'vue-loader'
       }
     ]
   }
