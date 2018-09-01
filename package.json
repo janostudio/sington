@@ -14,7 +14,8 @@
     "dev": "node ./build/dev-server.js",
     "build": "webpack --config ./build/webpack.prod.conf.js",
     "test": "karma start",
-    "ci": "karma start --single-run && npm install codecov -D && codecov coverage/cobertura-coverage.xml",
+    "ci": "karma start --single-run && npm install codecov -D",
+    "codecov": "karma start --single-run && npm install codecov -D && codecov coverage/cobertura-coverage.xml",
     "dcm": "sh ./cli/showtmpl.sh"
   },
   "engines": {

@@ -9,7 +9,9 @@ import { getImageBuffer } from './utils/ajax';
   // 获取dcm图像，并取出原始数据
   const res = await getImageBuffer('/static/tmpl.dcm');
   let data = Sington.dcmToPixelData(res);
-  console.log(data);
+
+  // 获取jpg，并去除原始数据
+
   // 获取画布的原始数据
   const draw = document.getElementById('draw');
   draw.width = data.width;
