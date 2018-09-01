@@ -39,25 +39,39 @@ function getMeta(unit8s) {
   }
 }
 
-/*
-(0028,0002)        Samples per Pixel          
-(0028,0004)        Photometric Interpretation  
-(0028,0010)        Rows                        
-(0028,0011)        Columns                     
-(0028,0030)        Pixel Spacing               
-(0028,0100)        Bits Allocated              
-(0028,0101)        Bits Stored                 
-(0028,0102)        High Bit                    
-(0028,0103)        Pixel Representation        
-(0028,1050)        Window Center               
-(0028,1051)        Window Width                
-(0028,1052)        Rescale Intercept           
-(0028,1053)        Rescale Slope              
-(0028,2110)        Lossy Image Compression     
-(0028,2112)        Lossy Image Compression Ratio
-将dcm的影像数据转成像素数据
-*/
-
+// 将dcm的影像数据转成像素数据，目前仅支持MONOCHROME2，即灰度CT
+function parsePixelData(meta){
+  if(meta['00280004'].includes('MONOCHROME2')){
+    const dcmData = meta['7fe00010'];
+    const width = meta['00280010'];
+    const height = meta['00280011'];
+    const bitsAllocated = meta['00280100'];
+    const bitsStored = meta['00280101'];
+    const highBit = meta['00280102'];
+    const windowCenter = '-400 ' || meta['00281050']; // -600\50 
+    const windowWidth = '1500' || meta['00281051']; // 1200\350
+    const rescaleIntercept = meta['00281052'];
+    const rescaleSlope = meta['00281053'];
+    const pixelData = new Uint8Array(width*height*4);
+    const windowTop = windowCenter * 1 + windowWidth / 2;
+    const windowFloor = windowCenter * 1 - windowWidth / 2;
+    for(let i = 0; i < dcmData.length; i+=2) {
+      let hu = parseInt(rescaleSlope) * utils.litteEndianCompute(dcmData.slice(i, i + 2)) + parseInt(rescaleIntercept);
+      if (hu >= windowTop) hu = windowTop;
+      if (hu <= windowFloor) hu = windowFloor;
+      const greyData = (hu + 1024) / windowWidth * 255;
+      const base = Math.floor(i / 2) * 4;
+      pixelData[base] = pixelData[base + 1] = pixelData[base + 2] = greyData;
+      pixelData[base + 3] = 255;
+    }
+    return {
+      width,
+      height,
+      size: width*height*4,
+      pixelData
+    };
+  }
+}
 
 // dcm转pixelData
 export function dcmToPixelData(buffer) {
@@ -66,13 +80,15 @@ export function dcmToPixelData(buffer) {
   getMeta(unit8s).forEach(item => {
     meta[item.tag] = item.value
   });
-  let width = meta['00280010'];
-  let height = meta['00280011'];
-  return {
-    ...meta,
-    width,
-    height,
-    size: meta['7fe00010'].length,
-    pixelData: meta['7fe00010']
-  };
+  return parsePixelData(meta);
+  // const width = meta['00280010'];
+  // const height = meta['00280011'];
+  // const pixelData = parsePixelData(meta);
+  // return {
+  //   ...meta,
+  //   width,
+  //   height,
+  //   size: pixelData.length,
+  //   pixelData,
+  // };
 };
