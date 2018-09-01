@@ -71,6 +71,7 @@ function parsePixelData(meta){
       pixelData
     };
   }
+  throw('Currently only supports Dcm with MONOCHROME2.');
 }
 
 // dcm转pixelData
@@ -81,14 +82,4 @@ export function dcmToPixelData(buffer) {
     meta[item.tag] = item.value
   });
   return parsePixelData(meta);
-  // const width = meta['00280010'];
-  // const height = meta['00280011'];
-  // const pixelData = parsePixelData(meta);
-  // return {
-  //   ...meta,
-  //   width,
-  //   height,
-  //   size: pixelData.length,
-  //   pixelData,
-  // };
 };
