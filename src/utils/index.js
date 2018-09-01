@@ -1,3 +1,5 @@
+import dcmUtils from './dcm';
+
 /*
 toArray typedArray、数字、字符串转化成正常数组
 decimalistToASICII 十进制转ASICII
@@ -6,6 +8,7 @@ bigEndianCompute 大端法计算值
 toBigendianArr 值根据大端法转化成数组
 */
 export default {
+  ...dcmUtils,
   // typedArray、数字、字符串转化成正常数组
   toArray(param) {
     const type = Object.prototype.toString.call(param)
@@ -23,6 +26,7 @@ export default {
   // 十进制转ASICII
   decimalistToASICII(arr){
     arr = this.toArray(arr);
+    console.log(arr);
     return arr.map(item => {
       return String.fromCharCode(item);
     }).join('');

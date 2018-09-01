@@ -7,7 +7,7 @@ import { getImageBuffer } from './utils/ajax';
   // let data = Sington.bmpToImageData(res);
 
   // 获取dcm图像，并取出原始数据
-  const res = await getImageBuffer('/static/tmpl.bmp');
+  const res = await getImageBuffer('/static/tmpl.dcm');
   let data = Sington.dcmToImageData(res);
 
   return false;

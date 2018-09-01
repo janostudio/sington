@@ -1,5 +1,6 @@
 /node_modules
 /coverage
 /doc
+/cli
 
 package-lock.json
