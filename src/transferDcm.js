@@ -1,30 +1,28 @@
 import utils from './utils';
 
-function getTag(unit8s) {
-  let cur = 131;
+// 获取dcm中所有的key与value
+function getDcmDetail(unit8s) {
+  let cur = 132;
   let arr = [];
-  // while(cur < unit8s.length) {
-  //   const tag = utils.getTag(cur + 1, cur + 4);
-  //   const vr = utils.getAsic2(utils.getXxd2(cur + 5, cur + 6));
-  //   let lenByte = utils.getLenbyteLen(tag, vr);
-  //   // let lenByte = 3;
-  //   // || tag.includes('0010')
-  //   // if( tag.includes('0080') || tag.includes('0008') && vr !== 'SQ' ) lenByte = 1;
-  //   const len = utils.getD(utils.getBig(cur + utils.hasRemain(vr) + 7, cur + utils.hasRemain(vr) + 7 + lenByte));
-  //   // 处理0002组信息
-  //   if(arr.length === 1) utils.get0002(arr);
-  //   arr.push({
-  //     tag: tag,
-  //     VR: vr, // + 2
-  //     length: len,
-  //     // value: ,
-  //     // lenByte: lenByte,
-  //     offset: parseInt(cur).toString(16) // 当前位置 + tag + VR + 预留 + 长度 + 内容长度
-  //   });
-  //   cur += 4 + 2 + utils.hasRemain(vr) + 1 + lenByte + len;
-  // }
+  while(cur < unit8s.length) {
+    const tag = utils.getTag(unit8s.slice(cur, cur + 4));
+    const VR =  utils.decimalistToASICII(unit8s.slice(cur + 4, cur + 6));
+    let VL = utils.computeValueLength(VR);
+    const revervedLen = VL - 2;
+    const dataLength =  utils.litteEndianCompute(unit8s.slice(cur + 6 + revervedLen, cur + 6 + revervedLen + VL));
+    arr.push({
+      tag,
+      VR,
+      dataLength,
+      offset: cur,
+      value: utils.getValue(VR, unit8s.slice(cur + 6 + revervedLen + VL, cur + 6 + revervedLen + VL + dataLength), tag)
+    });
+    cur += 6 + revervedLen + VL + dataLength;
+  }
+  return arr;
 }
 
+// 获取meta
 function getMeta(unit8s) {
   // 读取编码，看标识符是否为“DICM”
   const identifier = utils.decimalistToASICII(unit8s.slice(128, 132));
@@ -32,11 +30,26 @@ function getMeta(unit8s) {
     throw('The picture is not DICM.');
   }else {
     // 获取所有tag与dataElementOffset
-    getTag(unit8s);
+    return getDcmDetail(unit8s);
   }
 }
 
-export function dcmToImageData(buffer) {
+// 将dcm的影像数据转成像素数据
+
+// dcm转pixelData
+export function dcmToPixelData(buffer) {
   const unit8s = new Uint8Array(buffer);
-  const meta = getMeta(unit8s);
+  let meta = {};
+  getMeta(unit8s).forEach(item => {
+    meta[item.tag] = item.value
+  });
+  let width = meta['00280010'];
+  let height = meta['00280011'];
+  return {
+    ...meta,
+    width,
+    height,
+    size: meta['7fe00010'].length,
+    pixelData: meta['7fe00010']
+  };
 };

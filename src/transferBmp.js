@@ -9,19 +9,19 @@ function isBmp(unit8s) {
   }else {
     return {
       identifier,
-      size: utils.bigEndianCompute(unit8s.slice(2, 6)),
-      metaLength: utils.bigEndianCompute(unit8s.slice(10, 14)),
-      width: utils.bigEndianCompute(unit8s.slice(18, 22)),
-      height: utils.bigEndianCompute(unit8s.slice(22, 26)),
-      bitCount: utils.bigEndianCompute(unit8s.slice(28, 30)),
-      compression: utils.bigEndianCompute(unit8s.slice(30, 34)),
-      sizeImage: utils.bigEndianCompute(unit8s.slice(34, 38)),
+      size: utils.litteEndianCompute(unit8s.slice(2, 6)),
+      metaLength: utils.litteEndianCompute(unit8s.slice(10, 14)),
+      width: utils.litteEndianCompute(unit8s.slice(18, 22)),
+      height: utils.litteEndianCompute(unit8s.slice(22, 26)),
+      bitCount: utils.litteEndianCompute(unit8s.slice(28, 30)),
+      compression: utils.litteEndianCompute(unit8s.slice(30, 34)),
+      sizeImage: utils.litteEndianCompute(unit8s.slice(34, 38)),
     }
   }
 }
 
 // bmp转pixelData
-export function bmpTopixelData(buffer, emptyData) {
+export function bmpToPixelData(buffer, emptyData) {
   const unit8s = new Uint8Array(buffer);
   const meta = isBmp(unit8s);
   // 1个像素在bmp中由3个字节组成，原始pixelData还有一个透明度

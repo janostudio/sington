@@ -26,7 +26,6 @@ export default {
   // 十进制转ASICII
   decimalistToASICII(arr){
     arr = this.toArray(arr);
-    console.log(arr);
     return arr.map(item => {
       return String.fromCharCode(item);
     }).join('');
@@ -42,7 +41,7 @@ export default {
   bigEndianCompute(arr, radix) {
     arr = this.toArray(arr);
     radix = radix || 256;
-    return arr.reduce((pre, cur, index) => {
+    return arr.reverse().reduce((pre, cur, index) => {
       return pre + cur * Math.pow(radix, index);
     }, 0);
   },
@@ -56,5 +55,13 @@ export default {
       value = (value - mod) / radix;
     };
     return arr;
+  },
+  // 小端计算值
+  litteEndianCompute(arr, radix) {
+    arr = this.toArray(arr);
+    radix = radix || 256;
+    return arr.reduce((pre, cur, index) => {
+      return pre + cur * Math.pow(radix, index);
+    }, 0);
   }
 }

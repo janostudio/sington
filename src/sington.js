@@ -1,11 +1,11 @@
 // bmp转换器
-import { bmpToImageData } from './transferBmp';
+import { bmpToPixelData } from './transferBmp';
 // dcm转换器
-import { dcmToImageData } from './transferDcm';
-import version from './version'
+import { dcmToPixelData } from './transferDcm';
+import version from './version';
 
 export default {
-  bmpToImageData,
-  dcmToImageData,
+  bmpToPixelData,
+  dcmToPixelData,
   version
 };
