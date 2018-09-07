@@ -5,7 +5,7 @@ toArray typedArray、数字、字符串转化成正常数组
 decimalistToASICII 十进制转ASICII
 ASICIIToDecimalist ASICII转十进制
 bigEndianCompute 大端法计算值
-toBigendianArr 值根据大端法转化成数组
+toLittleEndianArr 值根据大端法转化成数组
 */
 export default {
   ...dcmUtils,
@@ -31,6 +31,13 @@ export default {
     }).join('');
   },
   // ASICII转十进制
+  charToDecimalist(string) {
+    const arr = string.split('');
+    return arr.map(item => {
+      return item.charCodeAt();
+    });
+  },
+  // ASICII转十进制
   ASICIIToDecimalist(arr){
     arr = this.toArray(arr);
     return arr.map(item => {
@@ -46,7 +53,7 @@ export default {
     }, 0);
   },
   // 值根据大端法转化成数组
-  toBigendianArr(value, radix) {
+  toLittleEndianArr(value, radix) {
     radix = radix || 256;
     let arr = [];
     while(value > 1){

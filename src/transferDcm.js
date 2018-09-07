@@ -24,6 +24,7 @@ function getDcmDetail(unit8s) {
     });
     cur += 6 + revervedLen + VL + dataLength;
   }
+  console.log(arr);
   return arr;
 }
 
