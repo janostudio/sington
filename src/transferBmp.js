@@ -4,9 +4,9 @@ import utils from './utils';
 function isBmp(unit8s) {
   // 读取编码，看标识符是否为“BM”
   const identifier = utils.decimalistToASICII(unit8s.slice(0, 2));
-  if(identifier !== 'BM') {
-    throw('The picture is not BMP.');
-  }else {
+  if (identifier !== 'BM') {
+    throw new Error('The picture is not BMP.');
+  } else {
     return {
       identifier,
       size: utils.litteEndianCompute(unit8s.slice(2, 6)),
@@ -16,27 +16,27 @@ function isBmp(unit8s) {
       bitCount: utils.litteEndianCompute(unit8s.slice(28, 30)),
       compression: utils.litteEndianCompute(unit8s.slice(30, 34)),
       sizeImage: utils.litteEndianCompute(unit8s.slice(34, 38)),
-    }
+    };
   }
 }
 
 // bmp转pixelData
-export function bmpToPixelData(buffer, emptyData) {
+export default function bmpToPixelData(buffer, emptyData) {
   const unit8s = new Uint8Array(buffer);
   const meta = isBmp(unit8s);
   // 1个像素在bmp中由3个字节组成，原始pixelData还有一个透明度
-  let pixelData = emptyData || new Uint8Array(meta.width * meta.height * 4);
+  const pixelData = emptyData || new Uint8Array(meta.width * meta.height * 4);
   let a = 0;
-  for (let i = 0; i < meta.height; i++){
+  for (let i = 0; i < meta.height; i++) {
     for (let j = 0; j < meta.width * 3; j++) {
       pixelData[a] = unit8s[meta.size - (meta.width * 3 * i) - (meta.width * 3 - j)];
-      if(!((j + 1) % 3)){
+      if (!((j + 1) % 3)) {
         pixelData[++a] = 255;// 透明度0-255
       }
-      a++ ;
+      a++;
     }
   }
-  return  emptyData ? pixelData : Object.assign(meta, {pixelData});
+  return emptyData ? pixelData : Object.assign(meta, { pixelData });
 }
 
 // TODO pixelDataToBmp
