@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/janostudio/sington",
   "devDependencies": {
-    "ajv": "^6.5.3",
+    "ajv": "^6.12.3",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.6",
     "babel-loader": "^7.1.2",
